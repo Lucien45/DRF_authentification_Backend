@@ -31,6 +31,10 @@ class AppUserManager(BaseUserManager):
 class AppUser(AbstractBaseUser, PermissionsMixin):
     user_id = models.AutoField(primary_key=True)
     email = models.EmailField(max_length=50, unique=True)
+    nom = models.CharField(max_length=50, blank=False, verbose_name="Nom", null=True)
+    prenom = models.CharField(max_length=50, blank=False, verbose_name="Prenom", null=True)
+    Civilite = models.CharField(max_length=50, blank=False, verbose_name="Civilite", null=True)
+    photo = models.ImageField(blank=False, upload_to="profile", verbose_name="Photo", null=True)
     username = models.CharField(max_length=50)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
