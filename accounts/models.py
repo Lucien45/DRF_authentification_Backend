@@ -2,8 +2,6 @@ from django.db import models
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 
-# Create your models here.
-
 class AppUserManager(BaseUserManager):
     def create_user(self, email, username, password=None):
         if not email:
@@ -13,9 +11,9 @@ class AppUserManager(BaseUserManager):
         email = self.normalize_email(email)
         user = self.model(email=email, username=username)
         user.set_password(password)
-        user.save()
+        user.save(using=self._db)
         return user
-    
+
     def create_superuser(self, email, username, password=None):
         if not email:
             raise ValueError('An email is required.')
@@ -25,7 +23,7 @@ class AppUserManager(BaseUserManager):
         user.is_admin = True
         user.is_staff = True
         user.is_superuser = True
-        user.save()
+        user.save(using=self._db)
         return user
 
 class AppUser(AbstractBaseUser, PermissionsMixin):
@@ -43,9 +41,6 @@ class AppUser(AbstractBaseUser, PermissionsMixin):
         return True
 
     def has_module_perms(self, app_label):
-        return True
-
-    def has_module_perm(self, app_label):
         return True
 
     def __str__(self):
