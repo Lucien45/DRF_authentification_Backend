@@ -7,17 +7,28 @@ from rest_framework import permissions, status
 from .validations import custom_validation, validate_email, validate_password
 
 # Create your views here.
+# class UserRegister(APIView):
+#     permission_classes = (permissions.AllowAny,)
+
+#     def post(self, request):
+#         clean_data = custom_validation(request.data)
+#         serializer = UserRegisterSerializer(data=clean_data)
+#         if serializer.is_valid(raise_exception=True):
+#             user = serializer.save()
+#             if user:
+#                 return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(status=status.HTTP_400_BAD_REQUEST)
+
 class UserRegister(APIView):
     permission_classes = (permissions.AllowAny,)
 
     def post(self, request):
-        clean_data = custom_validation(request.data)
-        serializer = UserRegisterSerializer(data=clean_data)
-        if serializer.is_valid(raise_exception=True):
+        serializer = UserRegisterSerializer(data=request.data)
+        if serializer.is_valid():
             user = serializer.save()
-            if user:
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
 
 
 class UserLogin(APIView):
